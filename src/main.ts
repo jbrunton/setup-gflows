@@ -1,16 +1,25 @@
+import {Installer, GitHubReleasesService, Octokit} from '@jbrunton/gha-installer'
 import * as core from '@actions/core'
-import {wait} from './wait'
+import * as github from '@actions/github'
+import { GitHub } from '@actions/github/lib/utils'
 
+function createOctokit(): Octokit {
+  const token = core.getInput('token');
+  if (token) {
+    return github.getOctokit(token);
+  } else {
+    core.warning('No token set, you may experience rate limiting. Set "token: ${{ secrets.GITHUB_TOKEN }}" if you have problems.');
+    return new GitHub();
+  }
+}
+
+  
 async function run(): Promise<void> {
   try {
-    const ms: string = core.getInput('milliseconds')
-    core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
-
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
-
-    core.setOutput('time', new Date().toTimeString())
+    const octokit = createOctokit()
+    const releasesService = GitHubReleasesService.create(octokit)
+    const installer = Installer.create(releasesService)
+    return await installer.installApp({ name: 'ytt', version: '0.28.0' })
   } catch (error) {
     core.setFailed(error.message)
   }
