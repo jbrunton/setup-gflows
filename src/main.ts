@@ -22,12 +22,16 @@ function createOctokit(): Octokit {
 async function run(): Promise<void> {
   try {
     const octokit = createOctokit()
-    const releasesService = GitHubReleasesService.create(octokit)
+    const repo = {owner: 'jbrunton', repo: 'gflows'}
+    const releasesService = GitHubReleasesService.create(
+      octokit,
+      repo,
+      getAssetName
+    )
     const installer = Installer.create(releasesService)
 
     const app = {name: 'gflows', version: core.getInput('version')}
-    const repo = {owner: 'jbrunton', repo: 'gflows'}
-    return await installer.installApp(app, repo, getAssetName())
+    return await installer.installApp(app)
   } catch (error) {
     core.setFailed(error.message)
   }

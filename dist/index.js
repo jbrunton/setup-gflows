@@ -1661,12 +1661,18 @@ const semver = __importStar(__webpack_require__(274));
 const app_info_1 = __webpack_require__(682);
 const core = __importStar(__webpack_require__(470));
 class GitHubReleasesService {
-    constructor(core, octokit) {
+    constructor(core, octokit, repo, assetName) {
         this._core = core;
         this._octokit = octokit;
+        this._repo = repo;
+        this._assetName = assetName;
     }
-    getDownloadInfo(app, repo, assetName) {
+    getDownloadInfo(app) {
         return __awaiter(this, void 0, void 0, function* () {
+            const repo = typeof this._repo == 'object' ? this._repo : this._repo(app);
+            const assetName = typeof this._assetName == 'string'
+                ? this._assetName
+                : this._assetName(app);
             const response = yield this._octokit.repos.listReleases(repo);
             const releases = response.data;
             if (app.version == 'latest') {
@@ -1698,9 +1704,8 @@ class GitHubReleasesService {
                 this._core.debug(`Found executable ${assetName} for ${app_info_1.describeApp(app)}`);
                 return {
                     version: release.tag_name,
-                    assetName: assetName,
                     url: candidate.browser_download_url,
-                    releaseNotes: release.body
+                    release: release
                 };
             }
         }
@@ -1714,8 +1719,8 @@ class GitHubReleasesService {
             return semver.rcompare(version1, version2);
         });
     }
-    static create(octokit) {
-        return new GitHubReleasesService(core, octokit);
+    static create(octokit, repo, assetName) {
+        return new GitHubReleasesService(core, octokit, repo, assetName);
     }
 }
 exports.GitHubReleasesService = GitHubReleasesService;
@@ -1775,11 +1780,11 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const octokit = createOctokit();
-            const releasesService = gha_installer_1.GitHubReleasesService.create(octokit);
+            const repo = { owner: 'jbrunton', repo: 'gflows' };
+            const releasesService = gha_installer_1.GitHubReleasesService.create(octokit, repo, getAssetName);
             const installer = gha_installer_1.Installer.create(releasesService);
             const app = { name: 'gflows', version: core.getInput('version') };
-            const repo = { owner: 'jbrunton', repo: 'gflows' };
-            return yield installer.installApp(app, repo, getAssetName());
+            return yield installer.installApp(app);
         }
         catch (error) {
             core.setFailed(error.message);
@@ -9960,16 +9965,17 @@ const core = __importStar(__webpack_require__(470));
 const cache = __importStar(__webpack_require__(533));
 const fs = __importStar(__webpack_require__(747));
 class Installer {
-    constructor(core, cache, fs, env, downloadInfoService) {
+    constructor(core, cache, fs, env, downloadService) {
         this._core = core;
         this._cache = cache;
         this._fs = fs;
         this._env = env;
-        this._releasesService = downloadInfoService;
+        this._downloadService = downloadService;
     }
-    installApp(app, repo, assetName, onFileDownloaded) {
+    installApp(app) {
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
-            const downloadInfo = yield this._releasesService.getDownloadInfo(app, repo, assetName);
+            const downloadInfo = yield this._downloadService.getDownloadInfo(app);
             const binName = this._env.platform == 'win32' ? `${app.name}.exe` : app.name;
             // note: app.version and downloadInfo.version may be different:
             // if app.version is 'latest' then downloadInfo.version will be the concrete version
@@ -9977,7 +9983,7 @@ class Installer {
             if (!binPath) {
                 this._core.info(`Downloading ${app.name} ${downloadInfo.version} from ${downloadInfo.url}`);
                 const downloadPath = yield this._cache.downloadTool(downloadInfo.url);
-                onFileDownloaded === null || onFileDownloaded === void 0 ? void 0 : onFileDownloaded(downloadPath, downloadInfo, this._core);
+                (_b = (_a = this._downloadService).onFileDownloaded) === null || _b === void 0 ? void 0 : _b.call(_a, downloadPath, downloadInfo, this._core);
                 this._fs.chmodSync(downloadPath, '755');
                 binPath = yield this._cache.cacheFile(downloadPath, binName, binName, downloadInfo.version);
             }
@@ -9987,15 +9993,15 @@ class Installer {
             this._core.addPath(binPath);
         });
     }
-    installAll(apps, repo, assetName, onFileDownloaded) {
+    installAll(apps) {
         return __awaiter(this, void 0, void 0, function* () {
             this._core.info('Installing ' +
                 apps.map((app) => `${app.name}:${app.version}`).join(', '));
-            yield Promise.all(apps.map((app) => this.installApp(app, repo, assetName(app), onFileDownloaded)));
+            yield Promise.all(apps.map((app) => this.installApp(app)));
         });
     }
-    static create(downloadInfoService) {
-        return new Installer(core, cache, fs, process, downloadInfoService);
+    static create(downloadService) {
+        return new Installer(core, cache, fs, process, downloadService);
     }
 }
 exports.Installer = Installer;
