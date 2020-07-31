@@ -9,7 +9,9 @@
     "format-check": "prettier --check **/*.ts",
     "lint": "eslint src/**/*.ts",
     "package": "ncc build --source-map",
-    "all": "npm run build && npm run format && npm run lint && npm run package"
+    "all": "npm run build && npm run format && npm run lint && npm run package",
+    "verify:installed": "node e2e/verify_installed",
+    "verify:output": "node e2e/verify_output"
   },
   "repository": {
     "type": "git",
@@ -38,6 +40,7 @@
     "jest-circus": "^26.1.0",
     "js-yaml": "^3.14.0",
     "prettier": "2.0.5",
+    "shelljs": "^0.8.4",
     "ts-jest": "^24.3.0",
     "typescript": "^3.9.7"
   }

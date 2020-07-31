@@ -33,4 +33,4 @@ jobs:
       run: |
         npm run verify:output \
           "gflows --config e2e/.gflows/config.yml --disable-colors check" \
-          "greeting: Hello, World"
+          "$(printf 'Checking gflows ... OK\nWorkflows up to date')"
