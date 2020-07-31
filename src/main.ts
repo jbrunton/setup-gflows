@@ -12,16 +12,29 @@ function createOctokit(): Octokit {
     return new GitHub();
   }
 }
-
   
 async function run(): Promise<void> {
   try {
     const octokit = createOctokit()
     const releasesService = GitHubReleasesService.create(octokit)
     const installer = Installer.create(releasesService)
-    return await installer.installApp({ name: 'ytt', version: '0.28.0' })
+
+    const app = { name: 'gflows', version: core.getInput('version') }
+    const repo = { owner: 'jbrunton', repo: 'gflows' }
+    return await installer.installApp(app, repo, getAssetName())
   } catch (error) {
     core.setFailed(error.message)
+  }
+}
+
+function getAssetName(): string {
+  switch (process.platform) {
+    case 'win32':
+      throw new Error(`Unsupported OS: Windows`)
+    case 'darwin':
+      return 'gflows-darwin-amd64'
+    default:
+      return 'gflows-linux-amd64'
   }
 }
 

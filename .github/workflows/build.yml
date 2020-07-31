@@ -1,0 +1,36 @@
+on:
+  pull_request:
+  push:
+    branches:
+      - develop
+      - 'releases/*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - run: npm install
+    - run: npm run all
+    - name: check build up to date
+      run: git diff --exit-code --stat HEAD
+
+  test-e2e-all:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: "${{ matrix.os }}"
+    steps:
+    - uses: actions/checkout@v1
+    - uses: ./
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+    - run: npm install
+    - name: check all apps installed
+      run: npm run verify:installed gflows
+    - name: check apps are usable
+      run: |
+        npm run verify:output \
+          "gflows --config e2e/.gflows/config.yml --disable-colors check" \
+          "greeting: Hello, World"
