@@ -1675,19 +1675,29 @@ class GitHubReleasesService {
                 return this.getDownloadInfoForAsset(app, assetName, release);
             }
             for (const candidate of releases) {
-                if (candidate.name == app.version) {
+                if (this.versionsEqual(app.version, candidate.tag_name)) {
                     return this.getDownloadInfoForAsset(app, assetName, candidate);
                 }
             }
             throw new Error(`Could not find version "${app.version}" for ${app.name}`);
         });
     }
+    versionsEqual(version, otherVersion) {
+        if (version == otherVersion) {
+            return true;
+        }
+        const cleanVersion = semver.clean(version);
+        if (cleanVersion == null) {
+            return false;
+        }
+        return cleanVersion == semver.clean(otherVersion);
+    }
     getDownloadInfoForAsset(app, assetName, release) {
         for (const candidate of release.assets) {
             if (candidate.name == assetName) {
                 this._core.debug(`Found executable ${assetName} for ${app_info_1.describeApp(app)}`);
                 return {
-                    version: release.name,
+                    version: release.tag_name,
                     assetName: assetName,
                     url: candidate.browser_download_url,
                     releaseNotes: release.body
@@ -1698,9 +1708,9 @@ class GitHubReleasesService {
     }
     sortReleases(releases) {
         return releases.sort((release1, release2) => {
-            // note: if a name isn't in semver format (e.g. "0.1.0 - initial release"), we put it last
-            const version1 = semver.clean(release1.name) || '0.0.0';
-            const version2 = semver.clean(release2.name) || '0.0.0';
+            // note: if a tag isn't in semver format, we put it last
+            const version1 = semver.clean(release1.tag_name) || '0.0.0';
+            const version2 = semver.clean(release2.tag_name) || '0.0.0';
             return semver.rcompare(version1, version2);
         });
     }

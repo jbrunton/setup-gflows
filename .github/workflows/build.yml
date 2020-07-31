@@ -36,3 +36,15 @@ jobs:
         npm run verify:output \
           "gflows --config e2e/.gflows/config.yml --disable-colors check" \
           "$(printf 'Checking gflows ... OK\nWorkflows up to date')"
+
+  test-e2e-specific-version:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: ./
+      with:
+        version: 0.1.5
+        token: ${{ secrets.GITHUB_TOKEN }}
+    - run: npm install
+    - name: check specific version is installed
+      run: npm run verify:output "gflows version" "gflows version 0.1.5"
