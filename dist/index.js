@@ -1657,12 +1657,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GitHubReleasesService = void 0;
-const semver = __importStar(__webpack_require__(274));
 const app_info_1 = __webpack_require__(682);
+const semver = __importStar(__webpack_require__(274));
 const core = __importStar(__webpack_require__(470));
 class GitHubReleasesService {
-    constructor(core, octokit, repo, assetName) {
+    constructor(core, env, octokit, repo, assetName) {
         this._core = core;
+        this._env = env;
         this._octokit = octokit;
         this._repo = repo;
         this._assetName = assetName;
@@ -1672,7 +1673,7 @@ class GitHubReleasesService {
             const repo = typeof this._repo == 'object' ? this._repo : this._repo(app);
             const assetName = typeof this._assetName == 'string'
                 ? this._assetName
-                : this._assetName(app);
+                : this._assetName(this._env.platform, app);
             const response = yield this._octokit.repos.listReleases(repo);
             const releases = response.data;
             if (app.version == 'latest') {
@@ -1705,7 +1706,7 @@ class GitHubReleasesService {
                 return {
                     version: release.tag_name,
                     url: candidate.browser_download_url,
-                    release: release
+                    meta: { release: release }
                 };
             }
         }
@@ -1720,7 +1721,7 @@ class GitHubReleasesService {
         });
     }
     static create(octokit, repo, assetName) {
-        return new GitHubReleasesService(core, octokit, repo, assetName);
+        return new GitHubReleasesService(core, process, octokit, repo, assetName);
     }
 }
 exports.GitHubReleasesService = GitHubReleasesService;
