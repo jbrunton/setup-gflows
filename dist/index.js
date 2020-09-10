@@ -1760,7 +1760,9 @@ class GitHubReleasesService {
         throw new Error(`Could not find executable ${assetName} for ${app_info_1.describeApp(app)}`);
     }
     sortReleases(releases) {
-        return releases.sort((release1, release2) => {
+        return releases
+            .filter(release => !release.draft)
+            .sort((release1, release2) => {
             // note: if a tag isn't in semver format, we put it last
             const version1 = semver.clean(release1.tag_name) || '0.0.0';
             const version2 = semver.clean(release2.tag_name) || '0.0.0';
