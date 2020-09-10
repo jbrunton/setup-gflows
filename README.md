@@ -28,5 +28,7 @@ To use a specific version:
 ```yaml
 steps:
 - uses: jbrunton/setup-gflows@v1
-  version: 0.1.0
+  with:
+    version: 0.1.0
+    token: ${{ secrets.GITHUB_TOKEN }}
 ```
