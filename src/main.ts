@@ -22,12 +22,10 @@ function createOctokit(): Octokit {
 async function run(): Promise<void> {
   try {
     const octokit = createOctokit()
-    const repo = {owner: 'jbrunton', repo: 'gflows'}
-    const releasesService = GitHubReleasesService.create(
-      octokit,
-      repo,
-      getAssetName
-    )
+    const releasesService = GitHubReleasesService.create(octokit, {
+      repo: {owner: 'jbrunton', repo: 'gflows'},
+      assetName: getAssetName
+    })
     const installer = Installer.create(releasesService)
 
     const app = {name: 'gflows', version: core.getInput('version')}
@@ -37,8 +35,8 @@ async function run(): Promise<void> {
   }
 }
 
-function getAssetName(): string {
-  switch (process.platform) {
+function getAssetName(platform: string): string {
+  switch (platform) {
     case 'win32':
       throw new Error(`Unsupported OS: Windows`)
     case 'darwin':
