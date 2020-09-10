@@ -1,5 +1,8 @@
 # setup-gflows
 
+[![build](https://github.com/jbrunton/setup-gflows/workflows/build/badge.svg?branch=develop)](https://github.com/jbrunton/setup-gflows/actions?query=branch%3Adevelop+workflow%3Abuild)
+[![release](https://github.com/jbrunton/setup-gflows/workflows/release/badge.svg)](https://github.com/jbrunton/setup-gflows/actions?query=workflow%3Arelease)
+
 A Github Action to install [GFlows – GitHub Workflow Templates](https://github.com/jbrunton/gflows).
 
 ## Usage
