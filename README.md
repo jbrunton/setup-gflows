@@ -3,7 +3,7 @@
 [![build](https://github.com/jbrunton/setup-gflows/workflows/build/badge.svg?branch=develop)](https://github.com/jbrunton/setup-gflows/actions?query=branch%3Adevelop+workflow%3Abuild)
 [![release](https://github.com/jbrunton/setup-gflows/workflows/release/badge.svg)](https://github.com/jbrunton/setup-gflows/actions?query=workflow%3Arelease)
 
-A Github Action to install [GFlows – GitHub Workflow Templates](https://github.com/jbrunton/gflows).
+A Github Action to install [GFlows – GitHub Workflow Templates](https://github.com/jbrunton/gflows), a A CLI tool that makes templating GitHub Workflows easy. This action is used to run checks to ensure the templates are kept up to date. See the [GFlows README](https://github.com/jbrunton/gflows/blob/develop/README.md) for more details.
 
 ## Usage
 
