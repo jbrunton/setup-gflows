@@ -13,16 +13,12 @@
     "verify:installed": "node e2e/verify_installed",
     "verify:output": "node e2e/verify_output"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/actions/typescript-action.git"
-  },
   "keywords": [
     "actions",
     "node",
     "setup"
   ],
-  "author": "",
+  "author": "John Brunton",
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.2.5",
