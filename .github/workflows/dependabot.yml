@@ -22,6 +22,6 @@ jobs:
       - name: commit
         run: |
           git add dist
-          git commit -m "[dependabot skip] Update dist"
+          git commit -m "[dependabot skip] Update dist" || echo "No changes to commit, skipping"
       - name: push changes
         run: git push origin ${{ github.event.pull_request.head.ref }}
