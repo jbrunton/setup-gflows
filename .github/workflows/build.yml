@@ -16,6 +16,7 @@ jobs:
     - run: npm run all
     - name: check build up to date
       run: git diff --exit-code --stat HEAD
+    - run: echo ${{ github.event.pull_request.head.ref }}
 
   test-e2e-all:
     strategy:
