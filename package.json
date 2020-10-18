@@ -21,7 +21,7 @@
   "author": "John Brunton",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.2.5",
+    "@actions/core": "^1.2.6",
     "@jbrunton/gha-installer": "0.5.2"
   },
   "devDependencies": {
