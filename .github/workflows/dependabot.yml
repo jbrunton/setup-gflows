@@ -12,6 +12,7 @@ jobs:
         with:
           fetch-depth: 1
           ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.CI_MINION_ACCESS_TOKEN }}
       - name: git config
         run: |
           git config --local user.email "$(git log --pretty='%ae' -1)"
