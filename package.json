@@ -25,6 +25,7 @@
     "@jbrunton/gha-installer": "0.5.4"
   },
   "devDependencies": {
+    "node-notifier": ">=8.0.1",
     "@types/jest": "^26.0.20",
     "@types/node": "^14.14.10",
     "@typescript-eslint/parser": "^4.11.1",
