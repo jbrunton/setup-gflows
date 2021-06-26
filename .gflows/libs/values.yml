@@ -2,3 +2,6 @@
 ---
 git:
   main_branch: develop
+  user:
+    email: jbrunton-ci-minion@outlook.com
+    name: jbrunton-ci-minion

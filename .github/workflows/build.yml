@@ -43,8 +43,8 @@ jobs:
     - uses: actions/checkout@v1
     - uses: ./
       with:
-        version: 0.1.5
+        version: 0.3.2
         token: ${{ secrets.GITHUB_TOKEN }}
     - run: npm install
     - name: check specific version is installed
-      run: npm run verify:output "gflows version" "gflows version 0.1.5"
+      run: npm run verify:output "gflows version" "gflows version 0.3.2"
