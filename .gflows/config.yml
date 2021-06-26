@@ -3,3 +3,6 @@
 githubDir: .github
 templates:
   engine: ytt
+  defaults:
+    dependencies:
+      - git@github.com:jbrunton/gflows-libs.git/tag-release

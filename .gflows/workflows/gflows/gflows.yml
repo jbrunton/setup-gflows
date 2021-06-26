@@ -11,7 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - #@ setup_go()
+    - uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.GFLOWS_DEPLOY_KEY }}
     - uses: jbrunton/setup-gflows@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
