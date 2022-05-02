@@ -13,6 +13,10 @@ inputs:
     description: "The version of GFlows to install (default: latest)"
     required: false
     default: latest
+  github-api-url:
+    description: 'configure github API URL. Default `https://api.github.com`'
+    required: false
+    default: 'https://api.github.com'
 runs:
   using: 'node12'
   main: 'dist/index.js'

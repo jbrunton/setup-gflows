@@ -32,3 +32,14 @@ steps:
     version: 0.1.0
     token: ${{ secrets.GITHUB_TOKEN }}
 ```
+
+When running on GHES:
+
+```yaml
+steps:
+- uses: jbrunton/setup-gflows@v1
+  with:
+    token: ${{ secrets.PUB_GITHUB_TOKEN }}
+    github-api-url: "https://api.github.com"
+```
+
