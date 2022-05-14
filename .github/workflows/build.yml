@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - run: npm install
+    - run: npm ci
     - run: npm run all
     - name: check build up to date
       run: git diff --exit-code --stat HEAD
@@ -28,7 +28,7 @@ jobs:
     - uses: ./
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-    - run: npm install
+    - run: npm ci
     - name: check all apps installed
       run: npm run verify:installed gflows
     - name: check apps are usable
@@ -45,6 +45,6 @@ jobs:
       with:
         version: 0.3.2
         token: ${{ secrets.GITHUB_TOKEN }}
-    - run: npm install
+    - run: npm ci
     - name: check specific version is installed
       run: npm run verify:output "gflows version" "gflows version 0.3.2"
