@@ -5,4 +5,4 @@ templates:
   engine: ytt
   defaults:
     dependencies:
-      - git@github.com:jbrunton/gflows-libs.git/tag-release
+      - https://raw.githubusercontent.com/jbrunton/gflows-libs/develop/tag-release

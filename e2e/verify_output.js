@@ -6,7 +6,7 @@ if (process.argv.length != 4) {
 }
 
 const command = process.argv[2]
-const expectedOutput = process.argv[3]
+const expectedOutput = process.argv[3].replace("\\n", "\n")
 
 const output = shell.exec(command, { silent: true }).stdout.trim()
 if (output == expectedOutput) {
