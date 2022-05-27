@@ -9,13 +9,16 @@ import {GitHub} from '@actions/github/lib/utils'
 
 function createOctokit(): Octokit {
   const token = core.getInput('token')
+  const gitHubOptions = {
+    baseUrl: core.getInput('github-api-url')
+  }
   if (token) {
-    return github.getOctokit(token)
+    return github.getOctokit(token, gitHubOptions)
   } else {
     core.warning(
       'No token set, you may experience rate limiting. Set "token: ${{ secrets.GITHUB_TOKEN }}" if you have problems.'
     )
-    return new GitHub()
+    return new GitHub(gitHubOptions)
   }
 }
 

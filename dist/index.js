@@ -1880,12 +1880,15 @@ const github = __importStar(__webpack_require__(469));
 const utils_1 = __webpack_require__(521);
 function createOctokit() {
     const token = core.getInput('token');
+    const gitHubOptions = {
+        baseUrl: core.getInput('github-api-url')
+    };
     if (token) {
-        return github.getOctokit(token);
+        return github.getOctokit(token, gitHubOptions);
     }
     else {
         core.warning('No token set, you may experience rate limiting. Set "token: ${{ secrets.GITHUB_TOKEN }}" if you have problems.');
-        return new utils_1.GitHub();
+        return new utils_1.GitHub(gitHubOptions);
     }
 }
 function run() {
